@@ -3,7 +3,7 @@ using WalletSolution.Application.WalletUsers.Command;
 using WalletSolution.Persistence.Data;
 
 namespace WalletSolution.Persistence.CommandHandlers.WalletUsers;
-public class UpdateWalletBalanceCommandHandler : IRequestHandler<UpdateWalletBalanceCommand, int>
+public class UpdateWalletBalanceCommandHandler : IRequestHandler<FundWalletBalanceCommand, int>
 {
     private readonly ApplicationDbContext _context;
 
@@ -12,7 +12,7 @@ public class UpdateWalletBalanceCommandHandler : IRequestHandler<UpdateWalletBal
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }    
 
-    public Task<int> Handle(UpdateWalletBalanceCommand request, CancellationToken cancellationToken)
+    public Task<int> Handle(FundWalletBalanceCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using WalletSolution.Application.WalletUsers.Query;
 using WalletSolution.Application.WalletUsers.Query.QueryModels;
-using WalletSolution.Common.Exceptions;
 using WalletSolution.Domain.Entities.WalletUsers;
 using WalletSolution.Persistence.Data;
 
@@ -18,9 +17,6 @@ public class GetAllUsersQueryHandler : IRequestHandler<GetWalletUserListQuery, L
 
     public async Task<List<WalletUserQueryModel>> Handle(GetWalletUserListQuery request, CancellationToken cancellationToken)
     {
-        if (request is null)
-            throw new InvalidNullInputException(nameof(request));
-
         var entity = _context.Set<WalletUser>();
         var users = await entity.ToListAsync(cancellationToken);
 

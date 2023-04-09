@@ -23,6 +23,7 @@ public class GetUserWalletQueryHandler : IRequestHandler<GetUserWalletListQuery,
         {
             walletQueryModels.Add(new WalletQueryModel
             {
+                Id = wallet.Id,
                 Currency = wallet.Currency,
                 Balance = wallet.Balance
             });

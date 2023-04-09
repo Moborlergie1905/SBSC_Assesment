@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WalletSolution.Domain.Entities;
 using WalletSolution.Common.Utilities;
+using WalletSolution.Domain.Entities.Admins;
 
 namespace WalletSolution.Persistence.Data;
 public class ApplicationDbContext : DbContext, IApplicationDbContext
@@ -11,6 +12,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<CurrencyType>()
+            .HasData(
+            new CurrencyType {Id = 1, Currency = "US Dollar", CurrencyCode = "USD" },
+            new CurrencyType { Id = 2, Currency = "Great Britain Pounds", CurrencyCode = "GBP" },
+            new CurrencyType { Id = 3, Currency = "Naira", CurrencyCode = "NGN" });
 
         var entitiesAssembly = typeof(IEntity).Assembly;
 

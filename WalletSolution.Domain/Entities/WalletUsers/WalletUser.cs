@@ -1,11 +1,16 @@
-﻿using WalletSolution.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using WalletSolution.Domain.Enums;
 
 namespace WalletSolution.Domain.Entities.WalletUsers;
 public class WalletUser : BaseEntity<Guid>
 {
+    [Required]
     public string Email { get; set; }
+    [Required]
     public string Password { get; set; }
+    [Required]
     public string FirstName { get; set; }
+    [Required]
     public string LastName { get; set; }
     public UserStatus Status { get; set; } = UserStatus.Active;
     public string ProfilePicture { get; set; }

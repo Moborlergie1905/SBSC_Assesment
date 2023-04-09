@@ -7,7 +7,11 @@ public class CurrencyTypeConfiguration : IEntityTypeConfiguration<CurrencyType>
 {
     public void Configure(EntityTypeBuilder<CurrencyType> builder)
     {
-        builder.ToTable(nameof(CurrencyType));
+        builder.ToTable("CurrencyTypes"); //nameof(CurrencyType)
         builder.HasKey(x => x.Id);
+        builder.HasData(
+            new CurrencyType { Currency = "US Dollar", CurrencyCode = "USD" },
+            new CurrencyType { Currency = "Great Britain Pounds", CurrencyCode = "GBP" },
+            new CurrencyType { Currency = "Naira", CurrencyCode = "NGN" });
     }
 }

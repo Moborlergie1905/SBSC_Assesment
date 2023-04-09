@@ -1,18 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using WalletSolution.Common.General;
 using WalletSolution.Persistence.Data;
+using MediatR;
 
 namespace WalletSolution.Persistence;
 public static class DependencyInjection
 {
     public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration configuration)
     {
+        
         var assembly = typeof(DependencyInjection).Assembly;
-        var appOptions = configuration.GetSection(nameof(AppOptions)).Get<AppOptions>();      
+        var appOptions = configuration.GetSection(nameof(AppOptions)).Get<AppOptions>();
 
-        services.AddScoped((serviceProvider) =>
+        // services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(config =>
+               config.RegisterServicesFromAssembly(assembly));
+
+         services.AddScoped((serviceProvider) =>
         {
             var option = CreateContextOptions(appOptions.ReadDatabaseConnectionString);
             return new ReadOnlyDbContext(option);

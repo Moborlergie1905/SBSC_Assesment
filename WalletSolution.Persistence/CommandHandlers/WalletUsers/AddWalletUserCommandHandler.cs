@@ -36,17 +36,20 @@ public class AddWalletUserCommandHandler : IRequestHandler<AddUserCommand, int>
             {
                 new Wallet
                 {
-                    CurrencyTypeId = currencies.AsQueryable().FirstOrDefault(x => x.CurrencyCode == "NGN").Id,
+                    CurrencyTypeId = currencies.FirstOrDefault(x => x.CurrencyCode == "NGN").Id,
+                    Currency = "NGN",
                     Balance = 0
                 },
                 new Wallet
                 {
-                     CurrencyTypeId = currencies.AsQueryable().FirstOrDefault(x => x.CurrencyCode == "USD").Id,
+                     CurrencyTypeId = currencies.FirstOrDefault(x => x.CurrencyCode == "USD").Id,
+                     Currency = "USD",
                     Balance = 0
                 },
                 new Wallet
                 {
-                     CurrencyTypeId = currencies.AsQueryable().FirstOrDefault(x => x.CurrencyCode == "GBP").Id,
+                     CurrencyTypeId = currencies.FirstOrDefault(x => x.CurrencyCode == "GBP").Id,
+                     Currency = "GBP",
                     Balance = 0
                 }
             }

@@ -6,7 +6,7 @@ using WalletSolution.Domain.Enums;
 using WalletSolution.Persistence.Data;
 
 namespace WalletSolution.Persistence.CommandHandlers.WalletUsers;
-public class WithdrawWalletCommandHandler : IRequestHandler<UpdateWalletBalanceCommand, int>
+public class WithdrawWalletCommandHandler : IRequestHandler<WithdrawWalletBalanceCommand, int>
 {
     private readonly ApplicationDbContext _context;
 
@@ -15,7 +15,7 @@ public class WithdrawWalletCommandHandler : IRequestHandler<UpdateWalletBalanceC
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<int> Handle(UpdateWalletBalanceCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(WithdrawWalletBalanceCommand request, CancellationToken cancellationToken)
     {
         if (request is null)
             throw new InvalidNullInputException(nameof(request));

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 
 namespace WalletSolution.Application.WalletUsers.Command;
-public class UpdateWalletBalanceCommand : IRequest<int>
+public class FundWalletBalanceCommand : IRequest<int>
 {
     public int Id { get; set; }
     public int CurrencyTypeId { get; set; }

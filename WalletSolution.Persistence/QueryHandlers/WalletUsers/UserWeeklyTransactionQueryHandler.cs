@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using WalletSolution.Application.WalletUsers.Query.QueryModels;
-using WalletSolution.Application.WalletUsers.Query;
 using WalletSolution.Persistence.Data;
 using WalletSolution.Common.Exceptions;
 using WalletSolution.Domain.Entities.WalletUsers;
 using Microsoft.EntityFrameworkCore;
+using WalletSolution.Application.WalletUsers.Query;
 
 namespace WalletSolution.Persistence.QueryHandlers.WalletUsers;
 public class UserWeeklyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<TransactionQueryModel>>
