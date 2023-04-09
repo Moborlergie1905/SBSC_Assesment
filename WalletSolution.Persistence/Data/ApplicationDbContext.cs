@@ -15,9 +15,21 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         modelBuilder.Entity<CurrencyType>()
             .HasData(
-            new CurrencyType {Id = 1, Currency = "US Dollar", CurrencyCode = "USD" },
+            new CurrencyType { Id = 1, Currency = "US Dollar", CurrencyCode = "USD" },
             new CurrencyType { Id = 2, Currency = "Great Britain Pounds", CurrencyCode = "GBP" },
             new CurrencyType { Id = 3, Currency = "Naira", CurrencyCode = "NGN" });
+        modelBuilder.Entity<AppUser>()
+            .HasData(
+                new AppUser { Id = 1, Email = "test.admin@wallet.com", Password = SecurityHelper.GetSha256Hash("password123") }
+            );
+         modelBuilder.Entity<Role>()
+            .HasData(
+                new Role { Id = 1, RoleName = "SuperAdmin" },
+                new Role { Id = 2, RoleName = "Admin" },                
+                new Role { Id = 3, RoleName = "WalletUser" }
+            );
+        modelBuilder.Entity<UserRole>()
+            .HasData(new UserRole { Id = 1, AppUserId = 1, RoleId = 1 });
 
         var entitiesAssembly = typeof(IEntity).Assembly;
 

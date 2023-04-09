@@ -17,6 +17,7 @@ public class ApiExceptionFilter : ExceptionFilterAttribute
                 { typeof(ExistingRecordException), HandleExistingRecordException },
                 { typeof(InsertUpdateException), HandleInsertUpdateException },
                 { typeof(InsufficentFundException), HandleInsufficientFundException },
+                { typeof(FailedAuthenticationException), HandleFailedAuthenticationException }
             };
     }
 
@@ -90,6 +91,14 @@ public class ApiExceptionFilter : ExceptionFilterAttribute
         var exception = context.Exception as InsufficentFundException;
 
         context.Result = new ApiResult<int>(-1, StatusCodes.Status400BadRequest, new string[] { exception.Message });
+
+        context.ExceptionHandled = true;
+    }
+    private void HandleFailedAuthenticationException(ExceptionContext context)
+    {
+        var exception = context.Exception as FailedAuthenticationException;
+
+        context.Result = new ApiResult<int>(-1, StatusCodes.Status401Unauthorized, new string[] { exception.Message });
 
         context.ExceptionHandled = true;
     }

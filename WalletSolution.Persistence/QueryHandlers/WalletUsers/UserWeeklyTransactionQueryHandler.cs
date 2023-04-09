@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WalletSolution.Application.WalletUsers.Query;
 
 namespace WalletSolution.Persistence.QueryHandlers.WalletUsers;
-public class UserWeeklyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<TransactionQueryModel>>
+public class UserWeeklyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<UserTransactionQueryModel>>
 {
     private readonly ApplicationDbContext _context;
 
@@ -16,26 +16,26 @@ public class UserWeeklyTransactionQueryHandler : IRequestHandler<GetUserPeriodic
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<List<TransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
+    public async Task<List<UserTransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
     {
         if (request is null)
             throw new InvalidNullInputException(nameof(request));
 
         var entity = _context.Set<Transaction>();
 
-        DayOfWeek currentDay = request.Period.DayOfWeek;
+        DayOfWeek currentDay = request.SelectedDate.DayOfWeek;
         int daysTillCurrentDay = currentDay - DayOfWeek.Sunday;
-        DateTime weekStart = request.Period.AddDays(-daysTillCurrentDay);
-        DateTime weekEnd = request.Period;
+        DateTime weekStart = request.SelectedDate.AddDays(-daysTillCurrentDay);
+        DateTime weekEnd = request.SelectedDate;
 
         var transactions = await entity.AsQueryable()
            .Where(x => x.WalletUserId == request.UserId && (x.DateCreated.Date >= weekStart.Date && x.DateCreated.Date <= weekEnd.Date) )
            .ToListAsync();
 
-        List<TransactionQueryModel> transactionQueryModels = new List<TransactionQueryModel>();
+        List<UserTransactionQueryModel> transactionQueryModels = new List<UserTransactionQueryModel>();
         transactions.ForEach(transaction =>
         {
-            transactionQueryModels.Add(new TransactionQueryModel
+            transactionQueryModels.Add(new UserTransactionQueryModel
             {
                 TransactionDate = transaction.DateCreated,
                 TransactionType = transaction.TransactionType,

@@ -4,10 +4,8 @@ using WalletSolution.Domain.Enums;
 namespace WalletSolution.Domain.Entities.WalletUsers;
 public class WalletUser : BaseEntity<Guid>
 {
-    [Required]
-    public string Email { get; set; }
-    [Required]
-    public string Password { get; set; }
+    [Required, DataType(DataType.EmailAddress)]
+    public string Email { get; set; }    
     [Required]
     public string FirstName { get; set; }
     [Required]

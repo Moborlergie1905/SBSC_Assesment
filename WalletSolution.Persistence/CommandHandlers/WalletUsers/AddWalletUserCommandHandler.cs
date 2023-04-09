@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using WalletSolution.Application.WalletUsers.Command;
 using WalletSolution.Common.Exceptions;
+using WalletSolution.Common.Utilities;
+using WalletSolution.Domain.Entities;
 using WalletSolution.Domain.Entities.Admins;
 using WalletSolution.Domain.Entities.WalletUsers;
 using WalletSolution.Persistence.Data;
@@ -21,15 +23,15 @@ public class AddWalletUserCommandHandler : IRequestHandler<AddUserCommand, int>
     {
         if(request is null)
             throw new InvalidNullInputException(nameof(request));
-        var existingUser = await _context.Set<WalletUser>().FirstOrDefaultAsync(x => x.Email  == request.Email);
+        var existingUser = await _context.Set<WalletUser>().SingleOrDefaultAsync(x => x.Email  == request.Email);
         if (existingUser is not null)
             throw new ExistingRecordException("A user with the supllied Email already exists");
+        var walletUserRole = await _context.Set<Role>().SingleOrDefaultAsync(x => x.RoleName == "WalletUser");
         var currencies = _context.Set<CurrencyType>().AsQueryable();
         var user = new WalletUser
         {
             Id = Guid.NewGuid(),
-            Email = request.Email,
-            Password = request.Password,
+            Email = request.Email,            
             FirstName = request.FirstName,
             LastName = request.LastName,
             Wallets = new List<Wallet>
@@ -55,9 +57,19 @@ public class AddWalletUserCommandHandler : IRequestHandler<AddUserCommand, int>
             }
         };
         _context.Set<WalletUser>().Add(user);
+
+        var appUser = new AppUser
+        {
+            Email = request.Email,
+            Password = SecurityHelper.GetSha256Hash(request.Password),
+            Roles = new List<UserRole> { new UserRole { RoleId = walletUserRole.Id } }
+        };
+
+        _context.Set<AppUser>().Add(appUser);
+
         int result =  await _context.SaveChangesAsync();
         if(result < 1)
-            throw new InsertUpdateException("", "Insert");
+            throw new InsertUpdateException("Sign-up", "Insert");
         return result;
     }
 }

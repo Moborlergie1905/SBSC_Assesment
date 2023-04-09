@@ -7,7 +7,7 @@ using WalletSolution.Domain.Entities.WalletUsers;
 using WalletSolution.Persistence.Data;
 
 namespace WalletSolution.Persistence.QueryHandlers.WalletUsers;
-public class UserDailyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<TransactionQueryModel>>
+public class UserDailyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<UserTransactionQueryModel>>
 {
     private readonly ApplicationDbContext _context;
 
@@ -16,7 +16,7 @@ public class UserDailyTransactionQueryHandler : IRequestHandler<GetUserPeriodicT
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<List<TransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
+    public async Task<List<UserTransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
     {
         if (request is null)
             throw new InvalidNullInputException(nameof(request));
@@ -24,13 +24,13 @@ public class UserDailyTransactionQueryHandler : IRequestHandler<GetUserPeriodicT
         var entity = _context.Set<Transaction>();
 
         var transactions = await entity.AsQueryable()
-            .Where(x => x.WalletUserId == request.UserId && x.DateCreated.Date == request.Period.Date)
+            .Where(x => x.WalletUserId == request.UserId && x.DateCreated.Date == request.SelectedDate.Date)
             .ToListAsync();
 
-        List<TransactionQueryModel> transactionQueryModels = new List<TransactionQueryModel>();
+        List<UserTransactionQueryModel> transactionQueryModels = new List<UserTransactionQueryModel>();
         transactions.ForEach(transaction =>
         {
-            transactionQueryModels.Add(new TransactionQueryModel
+            transactionQueryModels.Add(new UserTransactionQueryModel
             {
                 TransactionDate = transaction.DateCreated,
                 TransactionType = transaction.TransactionType,

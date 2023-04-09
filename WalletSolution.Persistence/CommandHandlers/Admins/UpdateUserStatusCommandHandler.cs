@@ -2,6 +2,7 @@
 using WalletSolution.Application.Admins.Command;
 using WalletSolution.Common.Exceptions;
 using WalletSolution.Domain.Entities.WalletUsers;
+using WalletSolution.Domain.Enums;
 using WalletSolution.Persistence.Data;
 
 namespace WalletSolution.Persistence.CommandHandlers.Admins;
@@ -22,6 +23,9 @@ public class UpdateUserStatusCommandHandler : IRequestHandler<UpdateUserStatusCo
         var existingUser = await entity.FindAsync(request.UserId, cancellationToken);
         if (existingUser is null)
             throw new NotFoundException("User not found");
+
+        if (existingUser.Status == request.UserStatus)
+            throw new ExistingRecordException($"The user is already {Enum.GetName(typeof(UserStatus), request.UserStatus)}");
 
         existingUser.Status = request.UserStatus;
         existingUser.DateModified = DateTime.Now;

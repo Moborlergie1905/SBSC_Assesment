@@ -38,21 +38,16 @@ public static class DependencyInjection
         services.AddSwaggerOptions();
         services.AddHttpContextAccessor();
         //services.AddCustomIdentity(siteSettings.IdentitySettings);
-      //  services.AddJwtAuthentication(siteSettings.JwtSettings);
+        services.AddJwtAuthentication(siteSettings.JwtSettings);
         services.AddApiControllers();
         services.AddAutoMapperConfiguration();
         services.AddMediatorConfiguration();
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());        
-
-        //services.AddHealthChecks()
-        //        .AddSqlServer(appOptions.WriteDatabaseConnectionString)
-        //        .AddRedis(distributedCacheConfig.ConnectionString);
-        //services.AddHealthChecksUI()
-        //        .AddInMemoryStorage();
-
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());   
+        
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+        services.AddSingleton<SiteSettings>(siteSettings);
 
         return services;
     }
@@ -207,21 +202,16 @@ public static class DependencyInjection
 
             var validationParameters = new TokenValidationParameters
             {
-                ClockSkew = TimeSpan.Zero, // default: 5 min
+                ClockSkew = TimeSpan.Zero,
                 RequireSignedTokens = true,
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-
+                ValidateIssuerSigningKey = true,          
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
-
-                ValidateAudience = true, //default : false
-                ValidAudience = jwtSettings.Audience,
-
-                ValidateIssuer = true, //default : false
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+                ValidAudience = jwtSettings.Audience,                
                 ValidIssuer = jwtSettings.Issuer,
-
                 TokenDecryptionKey = new SymmetricSecurityKey(encryptionKey)
             };
 
@@ -229,40 +219,40 @@ public static class DependencyInjection
             options.SaveToken = true;
             options.TokenValidationParameters = validationParameters;
 
-            options.Events = new JwtBearerEvents
-            {
-                OnAuthenticationFailed = context =>
-                {
-                    if (context.Exception != null)
-                        throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authentication failed.", HttpStatusCode.Unauthorized, context.Exception, null);
+            //options.Events = new JwtBearerEvents
+            //{
+            //    OnAuthenticationFailed = context =>
+            //    {
+            //        if (context.Exception != null)
+            //            throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authentication failed.", HttpStatusCode.Unauthorized, context.Exception, null);
 
-                    return Task.CompletedTask;
-                },
-                OnTokenValidated = async context =>
-                {
-                   // var signInManager = context.HttpContext.RequestServices.GetRequiredService<SignInManager<User>>();
+            //        return Task.CompletedTask;
+            //    },
+            //    OnTokenValidated = async context =>
+            //    {
+            //       // var signInManager = context.HttpContext.RequestServices.GetRequiredService<SignInManager<User>>();
                     
 
-                    var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                    if (claimsIdentity.Claims?.Any() != true)
-                        context.Fail("This token has no claims.");                   
+            //        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+            //        if (claimsIdentity.Claims?.Any() != true)
+            //            context.Fail("This token has no claims.");                   
 
-                    //Find user and token from database and perform your custom validation
-                    /*var userId = claimsIdentity.GetUserId<int>();
-                    var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, userId); */                  
+            //        //Find user and token from database and perform your custom validation
+            //        /*var userId = claimsIdentity.GetUserId<int>();
+            //        var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, userId); */             
 
-                  /*  if (!user.IsActive)
-                        context.Fail("User is not active.");*/
+            //      /*  if (!user.IsActive)
+            //            context.Fail("User is not active.");*/
 
-                    //await userRepository.UpdateLastLoginDateAsync(user, context.HttpContext.RequestAborted);
-                },
-                OnChallenge = context =>
-                {
-                    if (context.AuthenticateFailure != null)
-                        throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authenticate failure.", HttpStatusCode.Unauthorized, context.AuthenticateFailure, null);
-                    throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "You are unauthorized to access this resource.", HttpStatusCode.Unauthorized);
-                }
-            };
+            //        //await userRepository.UpdateLastLoginDateAsync(user, context.HttpContext.RequestAborted);
+            //    },
+            //    OnChallenge = context =>
+            //    {
+            //        if (context.AuthenticateFailure != null)
+            //            throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authenticate failure.", HttpStatusCode.Unauthorized, context.AuthenticateFailure, null);
+            //        throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "You are unauthorized to access this resource.", HttpStatusCode.Unauthorized);
+            //    }
+            //};
         });
     }
 

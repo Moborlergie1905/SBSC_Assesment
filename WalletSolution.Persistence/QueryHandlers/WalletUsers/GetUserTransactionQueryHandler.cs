@@ -6,7 +6,7 @@ using WalletSolution.Domain.Entities.WalletUsers;
 using WalletSolution.Persistence.Data;
 
 namespace WalletSolution.Persistence.QueryHandlers.WalletUsers;
-public class GetUserTransactionQueryHandler : IRequestHandler<GetUserTransactionListQuery, List<TransactionQueryModel>>
+public class GetUserTransactionQueryHandler : IRequestHandler<GetUserTransactionListQuery, List<UserTransactionQueryModel>>
 {
     private readonly ApplicationDbContext _context;
 
@@ -15,23 +15,19 @@ public class GetUserTransactionQueryHandler : IRequestHandler<GetUserTransaction
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<List<TransactionQueryModel>> Handle(GetUserTransactionListQuery request, CancellationToken cancellationToken)
+    public async Task<List<UserTransactionQueryModel>> Handle(GetUserTransactionListQuery request, CancellationToken cancellationToken)
     {
         var transactions = await _context.Set<Transaction>()
             .Where(x => x.WalletUserId == request.UserId)
-            .ToListAsync();
-        List<TransactionQueryModel> transactionQueryModels = new List<TransactionQueryModel>();
-        transactions.ForEach(transaction =>
-        {
-            transactionQueryModels.Add(new TransactionQueryModel
+            .Select(x => new UserTransactionQueryModel
             {
-                TransactionDate = transaction.DateCreated,
-                TransactionType = transaction.TransactionType,
-                Amount = transaction.Amount,
-                Currency = transaction.Currency
-            });
-        });
+                TransactionDate = x.DateCreated,
+                TransactionType = x.TransactionType,
+                Amount = x.Amount,
+                Currency = x.Currency
+            })
+            .ToListAsync();       
         
-        return transactionQueryModels;
+        return transactions;
     }
 }

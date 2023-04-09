@@ -2,9 +2,8 @@
 using WalletSolution.Application.WalletUsers.Query.QueryModels;
 
 namespace WalletSolution.Application.WalletUsers.Query;
-public class GetUserPeriodicTransactionQuery : IRequest<List<UserTransactionQueryModel>>
+public class GetPeriodicTransactionQuery : IRequest<List<TransactionQueryModel>>
 {
-    public Guid UserId { get; set; }
     public DateTime SelectedDate { get; set; }
     public string Period { get; set; }
 }

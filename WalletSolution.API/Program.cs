@@ -32,10 +32,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseWebApi(builder.Configuration);
 
-app.UseAuthorization();
+//app.UseHttpsRedirection();
 
-app.MapControllers();
+//app.UseAuthentication();
+
+//app.UseAuthorization();
+
+//app.MapControllers();
 
 app.Run();

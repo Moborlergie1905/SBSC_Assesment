@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WalletSolution.API.Controllers.WalletUsers.Requests;
+using WalletSolution.API.Utilities;
 using WalletSolution.APIFramework.Tools;
 using WalletSolution.Application.WalletUsers.Command;
 using WalletSolution.Application.WalletUsers.Query;
@@ -23,12 +25,7 @@ public class WalletUsersController : BaseController
         var result = await Mediator.Send(new GetWalletUserByEmailQuery { Email = email });
         return new ApiResult<WalletUserQueryModel>(result);
     }
-    [HttpGet, Route("all-users")]
-    public async Task<ApiResult<List<WalletUserQueryModel>>> GetAsync()
-    {
-        var result = await Mediator.Send(new GetWalletUserListQuery());
-        return new ApiResult<List<WalletUserQueryModel>>(result);
-    }
+   
 
     [HttpGet, Route("user-wallet")]
     public async Task<ApiResult<List<WalletQueryModel>>> GetUserWalletsAsync([FromQuery] Guid id)
@@ -37,10 +34,12 @@ public class WalletUsersController : BaseController
         return new ApiResult<List<WalletQueryModel>>(result);
     }
 
+    [AllowAnonymous]
     [HttpPost, Route("sign-up")]
-    public async Task<ApiResult<string>> AddUserAsync([FromBody] AddWalletUserRequest request)
+    public async Task<ApiResult<string>> AddUserAsync([FromForm] AddWalletUserRequest request)
     {
-       
+        if (!Helper.IsValidType(request.File))
+            throw new InvalidOperationException("Invalid file type");
         var command = Mapper.Map<AddWalletUserRequest, AddUserCommand>(request);
         await Mediator.Send(command);
         return new ApiResult<string>("Sign-up was successful");
@@ -60,12 +59,5 @@ public class WalletUsersController : BaseController
         var command = Mapper.Map<FundOrWithrawRequest, WithdrawWalletBalanceCommand>(request);
         await Mediator.Send(command);
         return new ApiResult<string>("Transaction was successful");
-    }
-
-    [HttpGet, Route("user-transactions")]
-    public async Task<ApiResult<List<TransactionQueryModel>>> GetUserTransactionsAsync([FromQuery] Guid userId)
-    {
-        var result = await Mediator.Send(new GetUserTransactionListQuery { UserId = userId });
-        return new ApiResult<List<TransactionQueryModel>>(result);
-    }
+    }   
 }

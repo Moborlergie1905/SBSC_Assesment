@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WalletSolution.Application.WalletUsers.Query;
 
 namespace WalletSolution.Persistence.QueryHandlers.WalletUsers;
-public class UserMonthlyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<TransactionQueryModel>>
+public class UserMonthlyTransactionQueryHandler : IRequestHandler<GetUserPeriodicTransactionQuery, List<UserTransactionQueryModel>>
 {
     private readonly ApplicationDbContext _context;
 
@@ -16,7 +16,7 @@ public class UserMonthlyTransactionQueryHandler : IRequestHandler<GetUserPeriodi
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<List<TransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
+    public async Task<List<UserTransactionQueryModel>> Handle(GetUserPeriodicTransactionQuery request, CancellationToken cancellationToken)
     {
         if (request is null)
             throw new InvalidNullInputException(nameof(request));
@@ -24,13 +24,13 @@ public class UserMonthlyTransactionQueryHandler : IRequestHandler<GetUserPeriodi
         var entity = _context.Set<Transaction>();
 
         var transactions = await entity.AsQueryable()
-            .Where(x => x.WalletUserId == request.UserId && x.DateCreated.Month == request.Period.Month)
+            .Where(x => x.WalletUserId == request.UserId && x.DateCreated.Month == request.SelectedDate.Month)
             .ToListAsync();
 
-        List<TransactionQueryModel> transactionQueryModels = new List<TransactionQueryModel>();
+        List<UserTransactionQueryModel> transactionQueryModels = new List<UserTransactionQueryModel>();
         transactions.ForEach(transaction =>
         {
-            transactionQueryModels.Add(new TransactionQueryModel
+            transactionQueryModels.Add(new UserTransactionQueryModel
             {
                 TransactionDate = transaction.DateCreated,
                 TransactionType = transaction.TransactionType,

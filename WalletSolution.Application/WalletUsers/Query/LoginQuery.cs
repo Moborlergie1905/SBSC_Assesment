@@ -2,7 +2,8 @@
 using WalletSolution.Application.WalletUsers.Query.QueryModels;
 
 namespace WalletSolution.Application.WalletUsers.Query;
-public class GetUserTransactionListQuery : IRequest<List<UserTransactionQueryModel>>
+public class LoginQuery : IRequest<UserModel>
 {
-    public Guid UserId { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
 }
