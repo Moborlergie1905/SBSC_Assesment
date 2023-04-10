@@ -18,22 +18,17 @@ public class GetAllUsersQueryHandler : IRequestHandler<GetWalletUserListQuery, L
     public async Task<List<WalletUserQueryModel>> Handle(GetWalletUserListQuery request, CancellationToken cancellationToken)
     {
         var entity = _context.Set<WalletUser>();
-        var users = await entity.ToListAsync(cancellationToken);
-
-        List<WalletUserQueryModel> walletUserQueryModels = new List<WalletUserQueryModel>();
-        users.ForEach(user =>
-        {
-            walletUserQueryModels.Add(new WalletUserQueryModel
+        var users = await entity
+            .Select(x => new WalletUserQueryModel
             {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Status = user.Status,
-                DateCreated = user.DateCreated,
-                DateModified = user.DateModified
-            });
-        });
-        return walletUserQueryModels;
+                Id = x.Id,
+                Email = x.Email,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Status = x.Status,
+                DateCreated = x.DateCreated,
+                DateModified = x.DateModified
+            }).ToListAsync(cancellationToken);        
+        return users;
     }
 }

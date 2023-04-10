@@ -17,8 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\WalletSolution.Application\WalletSolution.Application.csproj" />
     <ProjectReference Include="..\WalletSolution.APIFramework\WalletSolution.APIFramework.csproj" />
-    <ProjectReference Include="..\WalletSolution.Application\WalletSolution.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Uploads\CurrencyLogo\" />
+    <Folder Include="Uploads\ProfilePictures\" />
   </ItemGroup>
 
 </Project>

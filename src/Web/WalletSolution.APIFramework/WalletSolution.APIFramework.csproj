@@ -29,9 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WalletSolution.Application\WalletSolution.Application.csproj" />
-    <ProjectReference Include="..\WalletSolution.Common\WalletSolution.Common.csproj" />
-    <ProjectReference Include="..\WalletSolution.Persistence\WalletSolution.Persistence.csproj" />
+    <ProjectReference Include="..\..\Common\WalletSolution.Common\WalletSolution.Common.csproj" />
+    <ProjectReference Include="..\..\Core\WalletSolution.Application\WalletSolution.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\WalletSolution.Persistence\WalletSolution.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

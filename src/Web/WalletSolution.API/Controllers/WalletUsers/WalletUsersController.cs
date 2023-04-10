@@ -40,7 +40,11 @@ public class WalletUsersController : BaseController
     {
         if (!Helper.IsValidType(request.File))
             throw new InvalidOperationException("Invalid file type");
+
+        string filePath = Helper.WriteFile(request.File);
+
         var command = Mapper.Map<AddWalletUserRequest, AddUserCommand>(request);
+        command.ProfilePicture = filePath;
         await Mediator.Send(command);
         return new ApiResult<string>("Sign-up was successful");
     }

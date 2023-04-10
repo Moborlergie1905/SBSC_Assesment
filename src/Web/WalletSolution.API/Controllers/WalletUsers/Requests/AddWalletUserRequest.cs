@@ -7,6 +7,5 @@ public class AddWalletUserRequest
     public string Password { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public IFormFile File { get; set; }
-    public string ProfilePicture { get; set; }
+    public IFormFile File { get; set; }    
 }

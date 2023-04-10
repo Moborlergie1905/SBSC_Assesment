@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 using System.Text;
 using WalletSolution.API.Models;
@@ -39,25 +40,39 @@ public class Helper
         var extension = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
         string[] allowedExtension = { "png", "jpg", "jpeg" };
         return allowedExtension.Contains(extension);
+
+       
     }
-    public static string WriteFile(IFormFile file)
+    public static string WriteFile(IFormFile file, string type = null)
     {
+        string location = "ProfilePictures";
+        if (type == "Currency")
+            location = "CurrencyLogo";
+
+        long size = file.Length;
+        if (size  > 10000000)
+            throw new InvalidOperationException("Image file exceeds limit 0f 10MB");
         string filename = "";
         var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
         filename = DateTime.Now.Ticks.ToString() + extension;
 
-        var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files");
+        var filepath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\{location}");
 
         if (!Directory.Exists(filepath))
         {
             Directory.CreateDirectory(filepath);
         }
 
-        var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);
+        var exactpath = Path.Combine(Directory.GetCurrentDirectory(), $"Uploads\\{location}", filename);
+
+        // fileInfo = new FileInfo(exactpath);
+
+       
+
         using (var stream = new FileStream(exactpath, FileMode.Create))
         {
              file.CopyTo(stream);
         }
-        return filename;
+        return exactpath;
     }
 }

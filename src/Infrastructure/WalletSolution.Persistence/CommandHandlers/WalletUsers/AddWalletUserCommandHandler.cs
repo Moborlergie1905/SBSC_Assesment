@@ -34,6 +34,7 @@ public class AddWalletUserCommandHandler : IRequestHandler<AddUserCommand, int>
             Email = request.Email,            
             FirstName = request.FirstName,
             LastName = request.LastName,
+            ProfilePicture = request.ProfilePicture,
             Wallets = new List<Wallet>
             {
                 new Wallet
