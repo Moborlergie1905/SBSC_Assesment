@@ -9,14 +9,9 @@ using WalletSolution.APIFramework.Attributes;
 using WalletSolution.APIFramework.Swagger;
 using WalletSolution.Common.General;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using System.Net;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WalletSolution.API.Filters;
-using WalletSolution.Common;
-using ApplicationException = WalletSolution.Common.ApplicationException;
 using FluentValidation.AspNetCore;
 using WalletSolution.Common.Behaviours;
 
@@ -86,19 +81,13 @@ public static class DependencyInjection
             {
                 Version = "v1",
                 Title = "Wallet.WebUI",
-                Description = "Wallet Web Api",
-                Contact = new OpenApiContact
-                {
-                    Name = "IdealSoft Software Solutions",
-                    Email = "moborlergie1905@gmail.com",
-                    Url = new Uri("https://github.com/moborlergie1905"),
-                },
+                Description = "Wallet Web Api"              
             });
            
             options.OperationFilter<ApplySummariesOperationFilter>();
 
             //Add 401 response and security requirements (Lock icon) to actions that need authorization
-            options.OperationFilter<UnauthorizedResponsesOperationFilter>(true, "OAuth2");
+            //options.OperationFilter<UnauthorizedResponsesOperationFilter>(true, "OAuth2");
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -218,41 +207,7 @@ public static class DependencyInjection
             options.RequireHttpsMetadata = false;
             options.SaveToken = true;
             options.TokenValidationParameters = validationParameters;
-
-            //options.Events = new JwtBearerEvents
-            //{
-            //    OnAuthenticationFailed = context =>
-            //    {
-            //        if (context.Exception != null)
-            //            throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authentication failed.", HttpStatusCode.Unauthorized, context.Exception, null);
-
-            //        return Task.CompletedTask;
-            //    },
-            //    OnTokenValidated = async context =>
-            //    {
-            //       // var signInManager = context.HttpContext.RequestServices.GetRequiredService<SignInManager<User>>();
-                    
-
-            //        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-            //        if (claimsIdentity.Claims?.Any() != true)
-            //            context.Fail("This token has no claims.");                   
-
-            //        //Find user and token from database and perform your custom validation
-            //        /*var userId = claimsIdentity.GetUserId<int>();
-            //        var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, userId); */             
-
-            //      /*  if (!user.IsActive)
-            //            context.Fail("User is not active.");*/
-
-            //        //await userRepository.UpdateLastLoginDateAsync(user, context.HttpContext.RequestAborted);
-            //    },
-            //    OnChallenge = context =>
-            //    {
-            //        if (context.AuthenticateFailure != null)
-            //            throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "Authenticate failure.", HttpStatusCode.Unauthorized, context.AuthenticateFailure, null);
-            //        throw new ApplicationException(ApiResultStatusCode.UnAuthorized, "You are unauthorized to access this resource.", HttpStatusCode.Unauthorized);
-            //    }
-            //};
+           
         });
     }
 
@@ -269,25 +224,7 @@ public static class DependencyInjection
         });
 
         services.AddCors();
-    }
-
-    //public static void AddCustomIdentity(this IServiceCollection services, IdentitySettings settings)
-    //{
-    //    services.AddIdentity<User, Role>(identityOptions =>
-    //    {
-    //        //Password Settings
-    //        identityOptions.Password.RequireDigit = settings.PasswordRequireDigit;
-    //        identityOptions.Password.RequiredLength = settings.PasswordRequiredLength;
-    //        identityOptions.Password.RequireNonAlphanumeric = settings.PasswordRequireNonAlphanumeric; //#@!
-    //        identityOptions.Password.RequireUppercase = settings.PasswordRequireUppercase;
-    //        identityOptions.Password.RequireLowercase = settings.PasswordRequireLowercase;
-
-    //        //UserName Settings
-    //        identityOptions.User.RequireUniqueEmail = settings.RequireUniqueEmail;
-    //    })
-    //    .AddEntityFrameworkStores<ApplicationDbContext>()
-    //    .AddDefaultTokenProviders();
-    //}
+    }  
 
     public static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
