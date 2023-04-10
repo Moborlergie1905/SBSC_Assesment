@@ -14,6 +14,9 @@ using System.Text;
 using WalletSolution.API.Filters;
 using FluentValidation.AspNetCore;
 using WalletSolution.Common.Behaviours;
+using Hangfire;
+using WalletSolution.Persistence.BackgroundService;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WalletSolution.API;
 public static class DependencyInjection
@@ -47,7 +50,7 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IApplicationBuilder UseWebApi(this IApplicationBuilder app, IConfiguration configuration)
+    public static IApplicationBuilder UseWebApi(this IApplicationBuilder app, IConfiguration configuration )
     {
         app.UseCors(builder =>
         {
@@ -63,11 +66,12 @@ public static class DependencyInjection
 
         app.UseAuthentication();
         app.UseAuthorization();
+       
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();           
-        });
+        });      
 
         return app;
     }  
@@ -233,5 +237,5 @@ public static class DependencyInjection
     public static void AddMediatorConfiguration(this IServiceCollection services)
     {
         services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Mediator>());
-    }
+    }   
 }

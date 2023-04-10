@@ -3,6 +3,7 @@ using WalletSolution.Application;
 using WalletSolution.Persistence;
 using WalletSolution.Common;
 using WalletSolution.Common.General;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,13 +34,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseWebApi(builder.Configuration);
-
-//app.UseHttpsRedirection();
-
-//app.UseAuthentication();
-
-//app.UseAuthorization();
-
-//app.MapControllers();
-
 app.Run();
