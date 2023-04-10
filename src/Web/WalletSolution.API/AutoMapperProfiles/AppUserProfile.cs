@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using WalletSolution.API.Controllers;
+using WalletSolution.API.Controllers.Admins.Requests;
 using WalletSolution.API.Models;
+using WalletSolution.Application.Admins.Command;
 using WalletSolution.Application.WalletUsers.Query;
 using WalletSolution.Application.WalletUsers.Query.QueryModels;
 
@@ -11,5 +13,7 @@ public class AppUserProfile : Profile
     {
         CreateMap<LoginRequest, LoginQuery>();
         CreateMap<UserModel, UserDto>();
+        CreateMap<CreateAdminRequest, CreateAdminCommand>();
+        CreateMap<AssignRoleRequest, AssignAdminRoleCommand>();
     }
 }

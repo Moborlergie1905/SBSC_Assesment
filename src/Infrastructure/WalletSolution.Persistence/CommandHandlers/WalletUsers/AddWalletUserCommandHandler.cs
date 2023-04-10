@@ -16,7 +16,7 @@ public class AddWalletUserCommandHandler : IRequestHandler<AddUserCommand, int>
 
     public AddWalletUserCommandHandler(ApplicationDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<int> Handle(AddUserCommand request, CancellationToken cancellationToken)

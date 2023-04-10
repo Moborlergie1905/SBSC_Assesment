@@ -39,11 +39,7 @@ public class FundWalletCommandHandler : IRequestHandler<FundWalletBalanceCommand
         _context.Set<Transaction>().Add(transaction);
         _context.SaveChanges();
 
-        return result;
-
-        //await entity.Where(x => x.Id == request.Id)
-        //    .ExecuteUpdateAsync(x => x
-        //    .SetProperty(p => p.Balance, p => p.Balance + request.Amount));
+        return result;      
 
     }
 }

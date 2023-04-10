@@ -26,7 +26,8 @@ public class UpdateCurrencyTypeCommandHandler : IRequestHandler<UpdateCurrencyTy
 
         existingCurrency.Currency = request.Currency;
         existingCurrency.CurrencyCode = request.CurrencyCode;
-        existingCurrency.CurrencyLogo = request.CurrencyLogo;
+        if(!string.IsNullOrEmpty(existingCurrency.CurrencyLogo))
+            existingCurrency.CurrencyLogo = request.CurrencyLogo;
         existingCurrency.DateModified = DateTime.Now;
         entity.Update(existingCurrency);
         int result = await _context.SaveChangesAsync();

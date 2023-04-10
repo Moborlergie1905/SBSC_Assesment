@@ -10,5 +10,6 @@ public class WalletUserProfile : Profile
         CreateMap<AddWalletUserRequest, AddUserCommand>().ReverseMap();
         CreateMap<FundOrWithrawRequest, FundWalletBalanceCommand>().ReverseMap();
         CreateMap<FundOrWithrawRequest, WithdrawWalletBalanceCommand>().ReverseMap();
+        CreateMap<AddMoreCurrencyRequest, AddWalletCommand>().ReverseMap();
     }
 }
